@@ -11,8 +11,19 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap: 20px;
   min-height: 100vh;
   user-select: none;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 12px;
+  padding-left: 12px; /* compensa el letter-spacing para centrar */
+  color: #7aa2f7;
+  text-shadow: 0 0 20px rgba(122, 162, 247, 0.4);
 }
 
 .wrapper {
