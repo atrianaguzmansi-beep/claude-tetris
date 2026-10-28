@@ -33,4 +33,4 @@ Key points in `game.js`:
 
 - Changing `COLS`, `ROWS`, or `BLOCK` requires updating `<canvas id="board">` `width`/`height` in `index.html` (`COLS*BLOCK` × `ROWS*BLOCK`). `drawNext` assumes a 4×4 grid at 30px (matches the 120×120 next canvas).
 - `togglePause` shows the overlay on pause but does not hide it on resume.
-- When `endGame()` is reached from inside `loop`, `loop` still calls `requestAnimationFrame` afterward, so the loop keeps running after game over (input is blocked by the `gameOver` check, but the auto-drop continues).
+- `cancelAnimationFrame` inside `endGame()` can't cancel the frame currently running, so `loop` checks `gameOver` before re-requesting `requestAnimationFrame`. Keep that check if refactoring the loop.
