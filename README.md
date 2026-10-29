@@ -38,6 +38,7 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 - **Pieza reto "tuerca"** (3×3, gris metálico): un anillo con un hueco en el centro que ninguna otra pieza puede rellenar; esa fila solo se limpia cuando el hueco queda expuesto tras borrar las filas de encima.
 - **Rotación** con _wall kicks_ básicos (pequeños desplazamientos para que la pieza pueda rotar pegada a la pared).
 - **Soft drop** (bajada acelerada) y **hard drop** (caída instantánea).
+- **Efecto de rayo**: cada vez que se limpia una fila cae un rayo sobre ella con un destello.
 - **Pieza fantasma** (_ghost piece_): muestra dónde aterrizará la pieza actual.
 - **Vista previa** de la siguiente pieza.
 - **Sistema de puntuación** clásico de Tetris (100 / 300 / 500 / 800 multiplicado por nivel).

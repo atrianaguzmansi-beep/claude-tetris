@@ -29,6 +29,7 @@ const PIECES = [
 ];
 
 const LINE_SCORES = [0, 100, 300, 500, 800];
+const LIGHTNING_MS = 400;
 
 const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
@@ -47,6 +48,7 @@ let gridColor = '#22222e';
 let ghostAlpha = 0.2;
 
 let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
+let lightning = null; // { rows, bolts, start } mientras dura el efecto
 
 function createBoard() {
   return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
@@ -100,22 +102,68 @@ function merge() {
 }
 
 function clearLines() {
-  let cleared = 0;
-  for (let r = ROWS - 1; r >= 0; r--) {
-    if (board[r].every(v => v !== 0)) {
-      board.splice(r, 1);
-      board.unshift(new Array(COLS).fill(0));
-      cleared++;
-      r++;
-    }
+  const full = [];
+  for (let r = 0; r < ROWS; r++)
+    if (board[r].every(v => v !== 0)) full.push(r);
+  // de arriba a abajo: quitar una fila no cambia el índice de las de abajo
+  for (const r of full) {
+    board.splice(r, 1);
+    board.unshift(new Array(COLS).fill(0));
   }
+  const cleared = full.length;
   if (cleared) {
+    strikeLightning(full);
     lines += cleared;
     score += (LINE_SCORES[cleared] || 0) * level;
     level = Math.floor(lines / 10) + 1;
     dropInterval = Math.max(100, 1000 - (level - 1) * 90);
     updateHUD();
   }
+}
+
+// rayo en zigzag desde el borde superior hasta el centro de la fila limpiada
+function makeBolt(row) {
+  const targetY = row * BLOCK + BLOCK / 2;
+  let x = canvas.width * (0.15 + Math.random() * 0.7);
+  const pts = [[x, 0]];
+  for (let y = 15 + Math.random() * 20; y < targetY; y += 15 + Math.random() * 20) {
+    x = Math.min(canvas.width - 5, Math.max(5, x + (Math.random() - 0.5) * 50));
+    pts.push([x, y]);
+  }
+  pts.push([x, targetY]);
+  return pts;
+}
+
+function strikeLightning(rows) {
+  lightning = { rows, bolts: rows.map(makeBolt), start: performance.now() };
+}
+
+function drawLightning() {
+  if (!lightning) return;
+  const t = (performance.now() - lightning.start) / LIGHTNING_MS;
+  if (t >= 1) { lightning = null; return; }
+  // parpadeo al inicio, luego se desvanece
+  const a = (1 - t) * (t < 0.4 && Math.random() < 0.3 ? 0.3 : 1);
+  ctx.save();
+  ctx.fillStyle = `rgba(255, 255, 255, ${0.15 * a})`;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = `rgba(255, 245, 157, ${0.7 * a})`;
+  for (const r of lightning.rows) ctx.fillRect(0, r * BLOCK, canvas.width, BLOCK);
+  ctx.shadowColor = '#fff59d';
+  ctx.shadowBlur = 20;
+  ctx.lineJoin = 'round';
+  for (const bolt of lightning.bolts) {
+    ctx.beginPath();
+    ctx.moveTo(bolt[0][0], bolt[0][1]);
+    for (const [x, y] of bolt) ctx.lineTo(x, y);
+    ctx.strokeStyle = `rgba(255, 235, 59, ${a})`;
+    ctx.lineWidth = 5;
+    ctx.stroke();
+    ctx.strokeStyle = `rgba(255, 255, 255, ${a})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+  ctx.restore();
 }
 
 function ghostY() {
@@ -211,6 +259,8 @@ function draw() {
   for (let r = 0; r < current.shape.length; r++)
     for (let c = 0; c < current.shape[r].length; c++)
       drawBlock(ctx, current.x + c, current.y + r, current.shape[r][c], BLOCK);
+
+  drawLightning();
 }
 
 function drawNext() {
@@ -227,6 +277,7 @@ function drawNext() {
 function endGame() {
   gameOver = true;
   cancelAnimationFrame(animId);
+  lightning = null; // no congelar el rayo en el tablero final
   draw();
   overlayTitle.textContent = 'GAME OVER';
   overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
@@ -285,6 +336,7 @@ function init() {
   gameOver = false;
   dropInterval = 1000;
   dropAccum = 0;
+  lightning = null;
   lastTime = performance.now();
   next = randomPiece();
   spawn();
