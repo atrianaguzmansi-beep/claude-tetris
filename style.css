@@ -69,10 +69,35 @@ body {
   text-shadow: 0 0 20px var(--accent-glow);
 }
 
-.theme-toggle {
+/* ---- Controles superiores (skin + tema) ---- */
+.top-controls {
   position: fixed;
   top: 16px;
   right: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.skin-select {
+  background: var(--board-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.skin-select:hover,
+.skin-select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.theme-toggle {
   background: var(--board-bg);
   color: var(--text);
   border: 1px solid var(--border);

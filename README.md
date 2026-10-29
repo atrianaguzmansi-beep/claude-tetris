@@ -45,6 +45,7 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 - **Niveles** que aumentan cada 10 líneas y aceleran la caída.
 - **Pausa** y **Game Over** con opción de reinicio.
 - **Modo claro / oscuro**: botón en la esquina superior derecha. Por defecto es oscuro y la preferencia se guarda en `localStorage`.
+- **Skins visuales**: selector junto al botón de tema con cuatro estilos — **Retro** (bloques planos, el original), **Neón** (tablero negro y brillo con `shadowBlur`), **Pastel** (colores suaves y bordes redondeados) y **Pixel art** (textura de píxeles). Se aplica al instante y se guarda en `localStorage` (clave `skin`).
 
 ---
 
@@ -120,6 +121,7 @@ Contiene toda la lógica del juego. A grandes rasgos:
 - **Puntuación**: usa la tabla clásica `[0, 100, 300, 500, 800]` multiplicada por el nivel actual; el hard drop suma 2 puntos por celda recorrida y el soft drop 1 punto por fila.
 - **Nivel y velocidad**: el nivel sube cada 10 líneas; la velocidad de caída se calcula como `max(100, 1000 − (level − 1) × 90)` milisegundos.
 - **Ghost piece** (`ghostY`): proyecta la posición final de la pieza actual hacia abajo y la dibuja con `globalAlpha = 0.2`.
+- **Skins** (`SKINS`): cada skin define `colors`, `drawBlock`, `boardBg` y `grid`; `drawBlock` delega en la skin activa (tablero, fantasma y vista previa). `boardBg`/`grid` en `null` usan los del tema claro/oscuro.
 
 ### Flujo del juego
 
