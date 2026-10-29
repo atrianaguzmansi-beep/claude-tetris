@@ -348,6 +348,9 @@ const recordSaveBtn = document.getElementById('record-save');
 let combo = 0;          // piezas seguidas que limpian al menos una fila
 let bestCombo = 0;      // mejor combo de la partida actual
 let pendingRecord = null; // entrada que espera el nombre del jugador
+let startKeyHeld = false; // tecla con la que se empezó aún pulsada
+
+document.addEventListener('keyup', () => { startKeyHeld = false; });
 
 function loadRecords() {
   const empty = { top: [], mejorCombo: 0, maxLineas: 0 };
@@ -365,7 +368,12 @@ function loadRecords() {
 }
 
 function saveRecords(data) {
-  try { localStorage.setItem(RECORDS_KEY, JSON.stringify(data)); } catch (e) { /* almacenamiento no disponible */ }
+  try {
+    localStorage.setItem(RECORDS_KEY, JSON.stringify(data));
+    return true;
+  } catch (e) {
+    return false; // almacenamiento no disponible
+  }
 }
 
 function trackCombo(cleared) {
@@ -431,6 +439,7 @@ function showStartScreen() {
 }
 
 function startGame() {
+  startKeyHeld = true;
   startScreen.classList.add('hidden');
   init();
 }
@@ -439,8 +448,8 @@ function showGameOverRecords() {
   const data = loadRecords();
   data.mejorCombo = Math.max(data.mejorCombo, bestCombo);
   data.maxLineas = Math.max(data.maxLineas, lines);
-  saveRecords(data);
-  if (qualifies(data.top, score)) {
+  // sin almacenamiento no se pide nombre: no se podría guardar
+  if (saveRecords(data) && qualifies(data.top, score)) {
     pendingRecord = { nombre: '', puntos: score, lineas: lines, combo: bestCombo, fecha: new Date().toISOString() };
     recordNameInput.value = '';
     recordEntry.classList.remove('hidden');
@@ -482,8 +491,12 @@ function resetRecordsState() {
 // devuelve true si la tecla no debe llegar al juego
 function recordsKeyGuard(e) {
   if (e.target === recordNameInput) return true;
+  // mantener Space pulsado al empezar no debe hacer caídas por autorepetición
+  if (startKeyHeld && e.repeat) return true;
   if (!startScreen.classList.contains('hidden')) {
-    if (e.code === 'Space' || e.code === 'Enter' || e.code === 'NumpadEnter') {
+    // un botón con foco (p. ej. Borrar récords) conserva su Enter/Space
+    if (e.target.closest && e.target.closest('button')) return true;
+    if (!e.repeat && (e.code === 'Space' || e.code === 'Enter' || e.code === 'NumpadEnter')) {
       e.preventDefault();
       startGame();
     }
