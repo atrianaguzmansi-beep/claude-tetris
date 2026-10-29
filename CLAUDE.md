@@ -27,6 +27,7 @@ Key points in `game.js`:
 - **Loop** (`loop`): `requestAnimationFrame`, accumulates `dt` into `dropAccum`, drops one row when `≥ dropInterval`. Lock path: `lockPiece` → `merge` → `clearLines` → `spawn`; `spawn` triggers `endGame()` if the new piece collides immediately.
 - **Scoring/levels**: `LINE_SCORES[cleared] * level`; hard drop +2/cell, soft drop +1/row. Level = `floor(lines/10)+1`; `dropInterval = max(100, 1000 - (level-1)*90)`.
 - **Ghost piece**: `ghostY()` projection drawn at `alpha 0.2`.
+- **Skins**: `SKINS = { retro, neon, pastel, pixel }`, each `{ colors, drawBlock, boardBg, grid }`. `drawBlock` delegates to `activeSkin` (retro = original look, uses `COLORS`). `setSkin(key)` swaps skin, sets canvas inline `background` (`boardBg`; `null` = theme CSS var), saves `localStorage` key `skin`, redraws if paused/gameOver. `drawGrid` uses `activeSkin.grid || gridColor`. Skin draw fns that set shadow use `save/restore`. Adding a color index means adding it to every skin's `colors`.
 - **Input**: single `keydown` handler (arrows, `KeyX` rotate, `Space` hard drop, `KeyP` pause). `restart-btn` calls `init()`, which resets all state.
 
 ## Gotchas
