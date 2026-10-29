@@ -29,6 +29,8 @@ Key points in `game.js`:
 - **Ghost piece**: `ghostY()` projection drawn at `alpha 0.2`.
 - **Input**: single `keydown` handler (arrows, `KeyX` rotate, `Space` hard drop, `KeyP` pause). `restart-btn` calls `init()`, which resets all state.
 
+- **Records** (block `// ---- Récords locales` in `game.js`): `localStorage` key `tetris-records` = `{ top: [{nombre, puntos, lineas, combo, fecha}] (max 5), mejorCombo, maxLineas }`, always in try/catch. Page load calls `showStartScreen()` (`#start-screen`), not `init()`; game starts via "Jugar"/Space/Enter. `clearLines` → `trackCombo`; `endGame` → `showGameOverRecords` (name input `#record-name` if top 5); `init` → `resetRecordsState` (saves pending entry as "Anónimo"). keydown starts with `recordsKeyGuard` (ignores keys from the name input and while start screen is visible). Names rendered with `textContent`.
+
 ## Gotchas
 
 - Changing `COLS`, `ROWS`, or `BLOCK` requires updating `<canvas id="board">` `width`/`height` in `index.html` (`COLS*BLOCK` × `ROWS*BLOCK`). `drawNext` assumes a 4×4 grid at 30px (matches the 120×120 next canvas).

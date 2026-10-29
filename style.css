@@ -222,3 +222,140 @@ kbd {
 #restart-btn:hover {
   background: var(--accent-hover);
 }
+
+/* ---- Récords ---- */
+.records-box.hidden,
+.record-entry.hidden {
+  display: none;
+}
+
+.records-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.start-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: var(--accent);
+}
+
+.records-table {
+  border-collapse: collapse;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.records-table th {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 2px 6px;
+  text-align: left;
+}
+
+.records-table td {
+  padding: 3px 6px;
+  border-top: 1px solid var(--border);
+  text-align: left;
+}
+
+.records-table .num {
+  text-align: right;
+}
+
+.records-table tr.new-record td {
+  background: var(--accent-glow);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.records-empty {
+  font-size: 13px;
+  color: var(--muted-text);
+}
+
+.records-stats {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.records-stats strong {
+  color: var(--accent);
+}
+
+.record-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.record-entry-row {
+  display: flex;
+  gap: 6px;
+}
+
+#record-name {
+  width: 140px;
+  background: var(--board-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 14px;
+  user-select: text;
+}
+
+#record-name:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+#record-save,
+#play-btn {
+  background: var(--accent);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#play-btn {
+  padding: 10px 36px;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+#record-save:hover,
+#play-btn:hover {
+  background: var(--accent-hover);
+}
+
+.start-hint {
+  font-size: 11px;
+  color: var(--muted-text);
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
