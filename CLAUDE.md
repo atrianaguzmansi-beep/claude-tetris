@@ -21,7 +21,7 @@ Three files: `index.html` (DOM: `#board` canvas 300×600, side panel with `#scor
 
 Key points in `game.js`:
 
-- **Board**: `ROWS × COLS` matrix; each cell `0` (empty) or color index 1–7. The piece type number doubles as the value stored in its shape matrix and as the index into `COLORS`/`PIECES` (index 0 is `null`). Adding a piece type means updating `PIECES`, `COLORS`, and the `* 7` in `randomPiece()`.
+- **Board**: `ROWS × COLS` matrix; each cell `0` (empty) or color index 1–8. The piece type number doubles as the value stored in its shape matrix and as the index into `COLORS`/`PIECES` (index 0 is `null`). Adding a piece type means updating `PIECES` and `COLORS` (`randomPiece()` uses `PIECES.length - 1`). Type 8 is the custom "tuerca" challenge piece (3×3 ring, hollow center).
 - **Pieces**: square matrices; rotation = `rotateCW` (transpose + reverse). `tryRotate` applies simple horizontal wall kicks `[0,-1,1,-2,2]` (not SRS).
 - **Collision** (`collide`): out of bounds left/right/bottom or overlap; rows with `y < 0` are allowed.
 - **Loop** (`loop`): `requestAnimationFrame`, accumulates `dt` into `dropAccum`, drops one row when `≥ dropInterval`. Lock path: `lockPiece` → `merge` → `clearLines` → `spawn`; `spawn` triggers `endGame()` if the new piece collides immediately.
